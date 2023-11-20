@@ -8,7 +8,7 @@ report() {
 
 slide() {
     local title=$1
-    cp ~/.hmwk/slides/templates.pptx ./$1.pptx
+    cp ~/.hmwk/slides/template.pptx ./$title.pptx
 }
 
 case "$1" in
