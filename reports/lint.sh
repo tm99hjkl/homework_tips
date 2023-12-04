@@ -5,19 +5,32 @@ rules=(
 )
 
 kutouten-to-commaperiod () {
-    sed -i 's:、:，:g; s:。:．:g' $1.replaced
+    sed -i 's:、:，:g; s:。:．:g' $1.checked
 }
 
 da-to-dearu () {
-    sed -i 's:だ．:である．:g' $1.replaced
+    sed -i 's:だ．:である．:g' $1.checked
 }
 
-# main routine
-cp $1 $1.replaced
+# main
+if [ "$#" -eq 0 ]; then
+    echo "usage: $0 file1 file2 ..."
+    exit
+fi
 
-for rule in "${rules[@]}"; do
-    eval $rule $1
+for file in "$@"; do
+    cp $file $file.checked
+
+    for rule in "${rules[@]}"; do
+        eval $rule $file
+    done
+
+    colordiff -u $file $file.checked
+
+    if [ "$?" -eq 0 ]; then
+        echo "$file: passed all rules"
+        rm $file.checked
+    fi
 done
 
-colordiff -u $1 $1.replaced
-
+exit 0
